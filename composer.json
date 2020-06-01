@@ -1,0 +1,19 @@
+{
+  "name": "wored/yibuda-sdk",
+  "description": "杭州一步达电子口岸sdk",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "qiliu",
+      "email": "qiliuf@gmail.com"
+    }
+  ],
+  "require": {
+    "hanson/foundation-sdk": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wored\\YiBuDaSdk\\": "src"
+    }
+  }
+}
