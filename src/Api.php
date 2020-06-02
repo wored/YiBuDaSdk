@@ -7,12 +7,33 @@ use Hanson\Foundation\AbstractAPI;
 
 class Api extends AbstractAPI
 {
-    public $config;
+    public $config = [
+        //一步达公钥
+        'yibudaPublic' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCffOeIVYut9jW5w1L5uKX4aDvd837a8JhaWm5S8YqNQfgEmfD9T+rDknXLqMT+DXeQAqGo4hBmcbej1aoMzn6hIJHk3/TfTAToNN8fgwDotHewsTCBbVkQWtDTby3GouWToVsRi1i/A0Vfb0+xM8MnF46DdhhrnZrycERBSbyrcwIDAQAB',//一步达公钥
+        'RSAmethod'    => OPENSSL_ALGO_SHA1,//签名方法
+        //一步达AES密钥
+        'yibudaAESkey' => 'qZe60QZFxuirub2ey4+7+Q==',
+        'AESmethod'    => 'AES-128-ECB',
+    ];
 
     public function __construct(YiBuDaSdk $yiBuDaSdk)
     {
         parent::__construct($yiBuDaSdk);
-        $this->config = $yiBuDaSdk->getConfig();
+        $this->config = array_merge($yiBuDaSdk->getConfig(), $this->config);
+        $this->config['yibudaPublic'] = $this->keyToResource($this->config['yibudaPublic']);
+        $this->config['selfPublic'] = $this->keyToResource($this->config['selfPublic']);
+        $this->config['selfPrivate'] = $this->keyToResource($this->config['selfPrivate'], 'PRIVATE');
+    }
+
+    /**
+     * 秘钥转RSA源
+     * @param $key 秘钥
+     * @param string $type 秘钥类别
+     * @return string
+     */
+    public function keyToResource($key, $type = 'PUBLIC')
+    {
+        return "-----BEGIN $type KEY-----\n$key\n-----END $type KEY-----";
     }
 
     /**

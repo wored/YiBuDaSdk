@@ -25,7 +25,7 @@ class YiBuDaSdk extends Foundation
     /**
      * 订单信息创建到一步达
      * @param array $order 推送的数据，以数组形式
-     * @param int $declareType  企业报送类型。1-新增 2-变更 3-删除。默认为1。
+     * @param int $declareType 企业报送类型。1-新增 2-变更 3-删除。默认为1。
      * @return bool|mixed
      * @throws \Exception
      */
@@ -38,14 +38,7 @@ class YiBuDaSdk extends Foundation
             'content'    => $content,
             'msgType'    => 'IMPORTORDER',
             'dataDigest' => $sign,
-            'sendCode'   => $this->api->config['sendCode'],
-            'ssl'        => array(
-                'verify_peer' => false
-            ),
-            'https'      => array(
-                'curl_verify_ssl_peer' => false,
-                'curl_verify_ssl_host' => false
-            )
+            'sendCode'   => $order['mo']['body']['orderInfoList']['orderInfo']['jkfSign']['companyCode'],
         ];
         return $this->api->request($param);
     }
