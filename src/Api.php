@@ -18,7 +18,6 @@ class Api extends AbstractAPI
 
     public function __construct(YiBuDaSdk $yiBuDaSdk)
     {
-        parent::__construct($yiBuDaSdk);
         $this->config = array_merge($yiBuDaSdk->getConfig(), $this->config);
         $this->config['yibudaPublic'] = $this->keyToResource($this->config['yibudaPublic']);
         $this->config['selfPublic'] = $this->keyToResource($this->config['selfPublic']);
