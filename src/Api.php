@@ -95,9 +95,15 @@ class Api extends AbstractAPI
      * @param string $data
      * @return string
      */
-    public function makeSign(string $data)
+    public function makeSign(string $data,string $key=null)
     {
-        $RSAprivateKey = openssl_pkey_get_private($this->config['selfPrivate']);
+        if (empty($key)) {
+            //默认私钥
+            $privateKey = $this->config['selfPrivate'];
+        } else {
+            $privateKey = $this->keyToResource($key, 'PRIVATE');
+        }
+        $RSAprivateKey = openssl_pkey_get_private($privateKey);
         openssl_sign($data, $sign, $RSAprivateKey, $this->config['RSAmethod']);
         openssl_free_key($RSAprivateKey);
         return base64_encode($sign);
@@ -109,9 +115,15 @@ class Api extends AbstractAPI
      * @param $signature
      * @return bool
      */
-    public function verifySign(string $content, string $signature)
+    public function verifySign(string $content, string $signature,string $key=null)
     {
-        $RSApublicKey = openssl_pkey_get_public($this->config['yibudaPublic']);
+        if (empty($key)) {
+            //默认一步达公钥
+            $publicKey = $this->config['yibudaPublic'];
+        } else {
+            $publicKey = $this->keyToResource($key);
+        }
+        $RSApublicKey = openssl_pkey_get_public($publicKey);
         $res = (bool)openssl_verify($content, base64_decode($signature), $RSApublicKey, $this->config['RSAmethod']);
         openssl_free_key($RSApublicKey);
         return $res;
