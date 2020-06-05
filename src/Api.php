@@ -4,6 +4,7 @@ namespace Wored\YiBuDaSdk;
 
 
 use Hanson\Foundation\AbstractAPI;
+use Hanson\Foundation\Log;
 
 class Api extends AbstractAPI
 {
@@ -42,9 +43,11 @@ class Api extends AbstractAPI
      */
     public function request(array $params)
     {
+        Log::debug('Client Request:', compact('params'));
         $soap = new \SoapClient($this->config['rootUrl']);
-        $res = $soap->receive($params);
-        return $this->xml_parser($res->return);
+        $response = $soap->receive($params);
+        Log::debug('API response:', ['response' => $response->return]);
+        return $this->xml_parser($response->return);
     }
 
     /**
@@ -93,9 +96,10 @@ class Api extends AbstractAPI
     /**
      * RSA加密制作签名数据
      * @param string $data
+     * @param string $key
      * @return string
      */
-    public function makeSign(string $data,string $key=null)
+    public function makeSign(string $data, string $key = null)
     {
         if (empty($key)) {
             //默认私钥
@@ -113,9 +117,10 @@ class Api extends AbstractAPI
      * RSA验证签名
      * @param $content
      * @param $signature
+     * @param $key
      * @return bool
      */
-    public function verifySign(string $content, string $signature,string $key=null)
+    public function verifySign(string $content, string $signature, string $key = null)
     {
         if (empty($key)) {
             //默认一步达公钥
