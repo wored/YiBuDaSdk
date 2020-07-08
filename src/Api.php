@@ -47,7 +47,7 @@ class Api extends AbstractAPI
         $soap = new \SoapClient($this->config['rootUrl']);
         $response = $soap->receive($params);
         Log::debug('API response:', ['response' => $response->return]);
-        return $this->xml_parser($response->return);
+        return $this->xmlParser($response->return);
     }
 
     /**
@@ -139,7 +139,7 @@ class Api extends AbstractAPI
      * @param $str
      * @return bool|mixed
      */
-    function xml_parser(string $str)
+    function xmlParser(string $str)
     {
         $xml_parser = xml_parser_create();
         if (!xml_parse($xml_parser, $str, true)) {
